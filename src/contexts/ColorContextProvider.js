@@ -4,7 +4,7 @@ export const ColorContext = createContext();
 
 export default class ColorContextProvider extends Component{
     state = {
-        isPositive: true,
+        isPositive: undefined,
         green: {color: "#19D92E"},
         red: {color: '#DF1D1D'} 
         }

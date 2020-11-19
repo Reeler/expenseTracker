@@ -1,6 +1,7 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import Form from "./Form"
 import { ColorContext } from "../contexts/ColorContextProvider"
+
 
 function List(){
     const[expenseValue, setExpenseValue] = useState([]);
@@ -8,25 +9,34 @@ function List(){
     const[expense, setExpense] = useState(0);
     const[totalBalance, setTotalBalance] = useState(0);
 
-    const {isPositive, green, red, changeColorRed, changeColorGreen} = useContext(ColorContext);
-    const color = isPositive ? green : red
-
     const handleClick = (expense, expensePrice) => {
         const id = Math.floor(Math.random() * 10000000000);
-        setExpenseValue([...expenseValue, {id, expense, expensePrice}]);
+        const date = Date()
+        setExpenseValue([...expenseValue, {expense, expensePrice, date, id, color}]);
         if(expensePrice > 0){
             setIncome(expensePrice);
             changeColorGreen();
-            console.log(id)
 
         }else{
             setExpense(expensePrice);
             changeColorRed();
+
         }
         let i = parseInt(expensePrice, 10);
         setTotalBalance(totalBalance + i);
     }
 
+    useEffect(() => {
+        localStorage.setItem('finance', JSON.stringify(expenseValue));
+        return () => {
+            const localData = localStorage.getItem("finance");
+            return localData ? JSON.parse(localData) : [];
+        }
+        },[expenseValue])
+
+    const { isPositive, red, green, changeColorRed, changeColorGreen } = useContext(ColorContext);
+    const color = isPositive ? green : red; 
+    
     return(
         <div className="output">
             <div className="dashboard">
@@ -51,10 +61,11 @@ function List(){
                 <hr></hr>
                 <ul className="historyContainer">
                     {expenseValue.map(expVal => {
-                        return(<li key={expVal.id} className="historyInput" style={{background: color.color}}>
-                            <p className="date"> {Date()} </p>
-                            <h2 className="item"> {expVal.expense} </h2>
+                        return(<li key={expVal.id} className="historyInput" style={{background: expVal.color.color}}>
+                            <p className="date"> {expVal.date} </p>
+                            <h2 className="item" > {expVal.expense} </h2>
                             <h2 className="itemPrice">&#8373; {expVal.expensePrice}.00 </h2>
+                            
                             </li>)
                     })}
                 </ul>

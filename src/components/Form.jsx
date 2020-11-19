@@ -7,6 +7,8 @@ function Form({handleClick}){
     const handleSubmit = (e) => {
         e.preventDefault();
         handleClick(expense, expensePrice);
+        document.getElementById("inputValue").value = ""
+        document.getElementById("inputPrice").value = ""
     }
 
     return(
