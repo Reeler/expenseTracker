@@ -203,6 +203,8 @@ li{
 .item{
     margin: 0;
     grid-area: item;
+    display: flex;
+    align-items: center;
 }
 
 .itemPrice{
@@ -213,4 +215,27 @@ li{
     margin: 0;
     grid-area: itemPrice;
     padding-right: var(--padding);
+}
+
+/********* MEDIA **********/
+@media(max-width: 768px){
+    .output{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dashboard{
+        height: 40vh;
+    }
+}
+
+@media(max-width: 425px){
+    .historyInput{
+        display: grid;
+        grid: 
+        'date date'
+        'item itemPrice';
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    }  
 }

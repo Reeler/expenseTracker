@@ -1,25 +1,22 @@
-import React, { useState, useEffect, useContext } from "react"
+import React, { useState, useEffect } from "react"
 import Form from "./Form"
-import { ColorContext } from "../contexts/ColorContextProvider"
-
 
 function List(){
     const[expenseValue, setExpenseValue] = useState([]);
     const[income, setIncome] = useState(0);
     const[expense, setExpense] = useState(0);
     const[totalBalance, setTotalBalance] = useState(0);
-
+    
+    
     const handleClick = (expense, expensePrice) => {
         const id = Math.floor(Math.random() * 10000000000);
         const date = Date()
-        setExpenseValue([...expenseValue, {expense, expensePrice, date, id, color}]);
+        setExpenseValue([...expenseValue, {expense, expensePrice, date, id}]);
         if(expensePrice > 0){
             setIncome(expensePrice);
-            changeColorGreen();
 
         }else{
             setExpense(expensePrice);
-            changeColorRed();
 
         }
         let i = parseInt(expensePrice, 10);
@@ -28,14 +25,10 @@ function List(){
 
     useEffect(() => {
         localStorage.setItem('finance', JSON.stringify(expenseValue));
-        return () => {
-            const localData = localStorage.getItem("finance");
-            return localData ? JSON.parse(localData) : [];
-        }
-        },[expenseValue])
-
-    const { isPositive, red, green, changeColorRed, changeColorGreen } = useContext(ColorContext);
-    const color = isPositive ? green : red; 
+        localStorage.setItem('income', JSON.stringify(income));
+        localStorage.setItem('expense', JSON.stringify(expense));
+        localStorage.setItem('totalBalance', JSON.stringify(totalBalance));
+        },[expenseValue, income, expense, totalBalance])
     
     return(
         <div className="output">
@@ -61,7 +54,7 @@ function List(){
                 <hr></hr>
                 <ul className="historyContainer">
                     {expenseValue.map(expVal => {
-                        return(<li key={expVal.id} className="historyInput" style={{background: expVal.color.color}}>
+                        return(<li key={expVal.id} className="historyInput">
                             <p className="date"> {expVal.date} </p>
                             <h2 className="item" > {expVal.expense} </h2>
                             <h2 className="itemPrice">&#8373; {expVal.expensePrice}.00 </h2>
