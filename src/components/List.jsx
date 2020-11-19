@@ -1,24 +1,30 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import Form from "./Form"
+import { ColorContext } from "../contexts/ColorContextProvider"
 
 function List(){
-    const id = Math.floor(Math.random * 10000000000);
     const[expenseValue, setExpenseValue] = useState([]);
     const[income, setIncome] = useState(0);
     const[expense, setExpense] = useState(0);
     const[totalBalance, setTotalBalance] = useState(0);
 
+    const {isPositive, green, red, changeColorRed, changeColorGreen} = useContext(ColorContext);
+    const color = isPositive ? green : red
 
     const handleClick = (expense, expensePrice) => {
+        const id = Math.floor(Math.random() * 10000000000);
         setExpenseValue([...expenseValue, {id, expense, expensePrice}]);
         if(expensePrice > 0){
             setIncome(expensePrice);
+            changeColorGreen();
+            console.log(id)
+
         }else{
             setExpense(expensePrice);
+            changeColorRed();
         }
         let i = parseInt(expensePrice, 10);
         setTotalBalance(totalBalance + i);
-
     }
 
     return(
@@ -45,7 +51,7 @@ function List(){
                 <hr></hr>
                 <ul className="historyContainer">
                     {expenseValue.map(expVal => {
-                        return(<li key={expVal.id} className="historyInput">
+                        return(<li key={expVal.id} className="historyInput" style={{background: color.color}}>
                             <p className="date"> {Date()} </p>
                             <h2 className="item"> {expVal.expense} </h2>
                             <h2 className="itemPrice">&#8373; {expVal.expensePrice}.00 </h2>
